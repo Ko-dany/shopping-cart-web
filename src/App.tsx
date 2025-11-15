@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import ProductsPage from "./pages/ProductsPage";
+import CartPage from "./pages/CartPage";
+import type { Product } from "./models/types";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const [cart, setCart] = useState<Product[]>([]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <header className="bg-gray-100 p-4 flex justify-between">
+        <Link to="/" className="font-bold text-xl">
+          Taso's Shoe Shop
+        </Link>
+        <Link to="/cart" className="font-semibold text-blue-600">
+          Cart ({cart.length}) 🛒
+        </Link>
+      </header>
+      <Routes>
+        <Route path="/" element={<ProductsPage />} />
+        <Route path="/cart" element={<CartPage initialCart={cart} />} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;
