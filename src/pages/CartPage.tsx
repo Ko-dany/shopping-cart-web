@@ -42,7 +42,7 @@ const CartPage: React.FC<CartPageProps> = ({ onCartUpdate }) => {
       const success = await removeFromCart(cartId);
       if (success) {
         setCart((prev) => prev.filter((item) => item.id !== cartId));
-        onCartUpdate();
+        await onCartUpdate();
         alert("Item removed from cart!");
       } else {
         alert("Failed to remove item from cart.");

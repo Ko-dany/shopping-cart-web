@@ -8,7 +8,7 @@ interface ProductsPageProps {
 }
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ onCartUpdate }) => {
-  const [products, setProducts] = useState<Product[]>();
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,19 +30,23 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ onCartUpdate }) => {
     }
   };
 
-  const handleAddToCart = (productId: number) => {
+  const handleAddToCart = async (productId: number) => {
     const product = products.find((p) => p.id === productId);
     if (product) {
       const confirmed = confirm(`Add ${product.name} to cart?`);
       if (confirmed) {
-        addProductToCart(product.id).then((success) => {
-          if (success) {
-            alert(`${product.name} added to cart!`);
-            onCartUpdate();
-          } else {
-            alert(`Failed to add ${product.name} to cart.`);
-          }
-        });
+        console.log("Adding to cart:", product.id);
+        const success = await addProductToCart(product.id);
+        console.log("Add to cart success:", success);
+
+        if (success) {
+          alert(`${product.name} added to cart!`);
+          console.log("Calling onCartUpdate...");
+          await onCartUpdate();
+          console.log("onCartUpdate completed");
+        } else {
+          alert(`Failed to add ${product.name} to cart.`);
+        }
       }
     }
   };

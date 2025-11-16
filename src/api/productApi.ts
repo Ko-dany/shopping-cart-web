@@ -28,6 +28,7 @@ export const addProductToCart = async (productId: number): Promise<boolean> => {
     if (!selectedProduct) {
       throw new Error("Product not found");
     }
+
     // Add the product to the cart
     const response = await fetch(`${BASE_URL}/cart/${productId}`, {
       method: "POST",
@@ -35,14 +36,27 @@ export const addProductToCart = async (productId: number): Promise<boolean> => {
         "Content-Type": "application/json",
       },
     });
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    return data.success;
+
+    // Check response content type
+    const contentType = response.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+      // In case the server returns a JSON response indicating success
+      const data = await response.json();
+      return data.success ?? true;
+    } else {
+      // In case of a text response (e.g., "Product added to cart")
+      const text = await response.text();
+      console.log("Server response:", text);
+      return true; // Consider success if 200 OK response
+    }
   } catch (error) {
     console.error("Error adding product to cart:", error);
-    throw error;
+    return false;
   }
 };
 
@@ -65,22 +79,4 @@ export const getProductById = async (
     console.error("Error fetching product by ID:", error);
     throw error;
   }
-};
-
-export const addProduct = async (product: Product): Promise<boolean> => {
-  // TODO
-  return false;
-};
-
-export const updateProduct = async (
-  id: number,
-  product: Product
-): Promise<boolean> => {
-  // TODO
-  return false;
-};
-
-export const deleteProduct = async (id: number): Promise<boolean> => {
-  // TODO
-  return false;
 };
