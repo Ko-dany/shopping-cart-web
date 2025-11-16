@@ -1,7 +1,7 @@
 import type { CartItem } from "../models/types";
 
 // API base URL
-const BASE_URL = "https://your-api-url.com";
+const BASE_URL = "http://localhost:8080";
 
 export const fetchCart = async (): Promise<CartItem[]> => {
   // TODO: Implement API call to fetch cart items
