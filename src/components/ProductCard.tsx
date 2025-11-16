@@ -19,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       <p className="text-purple-600 font-semibold text-lg">${product.price}</p>
       <p className="text-gray-400 text-xs mb-2">SKU: {product.sku}</p>
       <button
-        className="mt-auto bg-pink-400 text-white py-2 px-4 rounded-full hover:bg-pink-500 font-semibold shadow-md"
+        className="mt-auto bg-pink-400 text-white py-2 px-4 rounded-full hover:bg-pink-500 font-semibold shadow-md cursor-pointer"
         onClick={() => onAddToCart(product.id)}
       >
         Add to Cart

@@ -18,7 +18,7 @@ const App: React.FC = () => {
       console.log("Loading cart...");
       const cartItems = await fetchCartItems();
       setCart(cartItems);
-      setCartCount(cartItems.length);
+      setCartCount(cartItems.reduce((total, item) => total + item.quantity, 0));
       console.log("Cart loaded:", cartItems, "Count:", cartItems.length);
     } catch (error) {
       console.error("Failed to load cart:", error);
