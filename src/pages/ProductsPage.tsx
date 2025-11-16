@@ -3,11 +3,14 @@ import ProductCard from "../components/ProductCard";
 import type { Product } from "../models/types";
 import { addProductToCart, fetchProducts } from "../api/productApi";
 
-const ProductsPage: React.FC = () => {
+interface ProductsPageProps {
+  onCartUpdate: () => void;
+}
+
+const ProductsPage: React.FC<ProductsPageProps> = ({ onCartUpdate }) => {
   const [products, setProducts] = useState<Product[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [cart, setCart] = useState<Product[]>([]);
 
   useEffect(() => {
     loadProducts();
@@ -34,8 +37,8 @@ const ProductsPage: React.FC = () => {
       if (confirmed) {
         addProductToCart(product.id).then((success) => {
           if (success) {
-            setCart((prevCart) => [...prevCart, product]);
             alert(`${product.name} added to cart!`);
+            onCartUpdate();
           } else {
             alert(`Failed to add ${product.name} to cart.`);
           }

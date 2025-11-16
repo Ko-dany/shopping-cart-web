@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
-import type { Product } from "./models/types";
+import type { CartItem } from "./models/types";
+import { fetchCartItems } from "./api/cartApi";
 
 const App: React.FC = () => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartCount, setCartCount] = useState<number>(0);
+
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  const loadCart = async () => {
+    try {
+      const cartItems = await fetchCartItems();
+      setCart(cartItems);
+      setCartCount(cartItems.reduce((total, item) => total + item.quantity, 0));
+      console.log("Cart loaded:", cartItems);
+    } catch (error) {
+      console.error("Failed to load cart:", error);
+    }
+  };
+
+  const handleCartUpdate = () => {
+    loadCart();
+  };
 
   return (
     <Router>
@@ -14,12 +35,18 @@ const App: React.FC = () => {
           Taso's Shoe Shop
         </Link>
         <Link to="/cart" className="font-semibold text-blue-600">
-          Cart ({cart.length}) 🛒
+          Cart ({cartCount}) 🛒
         </Link>
       </header>
       <Routes>
-        <Route path="/" element={<ProductsPage />} />
-        <Route path="/cart" element={<CartPage initialCart={cart} />} />
+        <Route
+          path="/"
+          element={<ProductsPage onCartUpdate={handleCartUpdate} />}
+        />
+        <Route
+          path="/cart"
+          element={<CartPage onCartUpdate={handleCartUpdate} />}
+        />
       </Routes>
     </Router>
   );
