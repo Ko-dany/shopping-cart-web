@@ -1,7 +1,7 @@
 import type { CartItem } from "../models/types";
 
 // API base URL
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://shopping-cart-api-22wy.onrender.com";
 
 export const fetchCartItems = async (): Promise<CartItem[]> => {
   try {

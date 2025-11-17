@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
-import type { CartItem } from "./models/types";
 import { fetchCartItems } from "./api/cartApi";
 
 const App: React.FC = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
   const [cartCount, setCartCount] = useState<number>(0);
 
   useEffect(() => {
@@ -17,7 +15,6 @@ const App: React.FC = () => {
     try {
       console.log("Loading cart...");
       const cartItems = await fetchCartItems();
-      setCart(cartItems);
       setCartCount(cartItems.reduce((total, item) => total + item.quantity, 0));
       console.log("Cart loaded:", cartItems, "Count:", cartItems.length);
     } catch (error) {
